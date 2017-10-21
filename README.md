@@ -6,11 +6,13 @@ This tool allows users to manually verify that the 0x generated order hash they 
 
 ### Usage
 
-![Alt text](/screenshot/img.jpg?raw=true "The verification tool")
+![Alt text](/screenshot/img.png?raw=true "The verification tool")
 
-Copy a provided, human readable, 0x json order into the first box, and the hash proposed to be signed into the second text box.
-
-Press verify to receive a confirmation that the hash is valid.
+1. Copy a 0x json order from Ethfinex exchange portal or other source (this should provided before request to sign with Metamask). This order format is human readable and fields accuracy should be checked.
+2. Paste the order into the first box in the tool.
+3. Copy the hash Metamask asks you to sign and paste into the second box.
+4. Press verify to receive a confirmation that the hash is valid.
+5. Sign using metamask.
 
 ### Longer term solutions
 
