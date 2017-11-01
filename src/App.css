@@ -27,10 +27,13 @@
   height: 50px;
   padding: 10px;
   width: 60%;
+  border: none; /* <-- This thing here */
+  border:solid 1px #ccc;
+  border-radius: 2px;
 }
 
 .App-button {
-  background-color: #1E2639; 
+  background-color: #1E2639;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -38,19 +41,24 @@
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+  border-radius: 2px;
 }
 
 .App-efx {
-  position:absolute;
-  top:0;
-  left:0;
+  position: absolute;
+  top: 0;
+  left: 0;
   padding: 10px;
-  color:white;
+  color: white;
   width: 250px;
 }
 
+.App-efxx {
+
+}
+
 .App-efx a:link{
-    color:lightsteelblue;
+    color: lightsteelblue;
 }
 
 @keyframes App-logo-spin {
