@@ -67,20 +67,27 @@ class App extends Component {
       return
     }
 
-    let calculatedOrderHash =
+    try {
+      let calculatedOrderHash =
       ZeroEx.getOrderHashHex(JSON.parse(this.state.order))
-    if (ZeroEx.isValidOrderHash(this.state.hash)) {
-      if (calculatedOrderHash === this.state.hash) {
-        this.setState({success: true})
+      if (ZeroEx.isValidOrderHash(this.state.hash)) {
+        if (calculatedOrderHash === this.state.hash) {
+          this.setState({success: true})
+        } else {
+          this.setState({
+            error: 'The hash does not match the order.'
+          })
+        }
       } else {
         this.setState({
-          error: 'The hash does not match the order.'
+          error: 'The hash should look be in the following format 0x4jdsf...'
         })
       }
-    } else {
+    } catch (e) {
       this.setState({
-        error: 'The hash should look be in the following format 0x4jdsf...'
+        error: 'Order must conform to the 0x message format (see: https://0xproject.com/wiki#Message-Format)'
       })
+      return
     }
   }
 
