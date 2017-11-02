@@ -186,7 +186,7 @@ class App extends Component {
             This tool was created open source by &thinsp;
             <a href='https://www.ethfinex.com'>Ethfinex</a>
             &thinsp; and the source code can be found on &thinsp;
-            <a href='https://github.com/plutoegg/0x-order-verify'>
+            <a href='https://github.com/ethfinex/0x-order-verify'>
               Github
             </a>
             .
