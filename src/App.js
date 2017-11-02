@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ZeroEx } from '0x.js'
-import Textarea from 'react-textarea-autosize'
+import TextArea from 'react-textarea-autosize'
 
 import logo from './logo.svg'
 import './App.css'
@@ -95,7 +95,7 @@ class App extends Component {
     return (
       <div className='App-div-input'>
         <b>{_text}</b>
-        <Textarea
+        <TextArea
           className={_className}
           onChange={_onChange}
           value={_value}
