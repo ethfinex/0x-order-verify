@@ -22,9 +22,10 @@ class App extends Component {
 
   handleOrderChange (e) {
     let parsedJson = e.target.value
+    parsedJson = parsedJson.replace(/[“”‘’"]/g, '"')
     let error = null
     try {
-      parsedJson = JSON.parse(e.target.value)
+      parsedJson = JSON.parse(parsedJson)
     } catch (e) {
       // silence error, user could be typing
       error = e
