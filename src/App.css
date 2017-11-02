@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .App-logo {
@@ -12,25 +16,42 @@
   height: 150px;
   padding: 20px;
   color: white;
+  align-self: stretch;
 }
 
 .App-title {
   font-size: 1.5em;
+  font-weight: normal;
 }
 
 .App-intro {
   font-size: large;
 }
 
-.App-inputbox {
-  font-size: small;
-  height: 50px;
+.App-body {
   padding: 10px;
-  width: 60%;
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+}
+
+.App-textarea {
+  font-size: small;
+  margin-top: 10px;
+  resize: none;
+  width: 100%;
+  border: none;
+  border:solid 1px #ccc;
+  border-radius: 2px;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+ -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
+  background-color: #f9f9f9;
+  font-family: monospace;
 }
 
 .App-button {
-  background-color: #1E2639; 
+  background-color: #1E2639;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -38,19 +59,67 @@
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+  border-radius: 2px;
+  cursor: pointer;
+  opacity: .95;
+  font-weight: bold;
 }
 
-.App-efx {
-  position:absolute;
-  top:0;
-  left:0;
-  padding: 10px;
-  color:white;
-  width: 250px;
+.App-button:hover {
+  opacity: 1;
 }
 
-.App-efx a:link{
-    color:lightsteelblue;
+.App-body-container {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.App-div-input {
+  padding-bottom: 20px;
+  text-align: left;
+  word-break: break-word;
+}
+
+.App-div-submit {
+  padding-bottom: 20px;
+}
+
+.App-form {
+  flex: 1;
+}
+
+.App-body-container a:link{
+    color: lightsteelblue;
+}
+
+.App-alert-green {
+  flex: 1;
+  border-radius: 2px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: green;
+  padding: 17.5px;
+  display: flex;
+  flex-direction: row;
+  background-color: #e6ffe6;
+  justify-content: center;
+  color: green;
+  margin-bottom: 10px;
+}
+
+.App-alert-red {
+  flex: 1;
+  border-radius: 2px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: red;
+  padding: 17.5px;
+  display: flex;
+  flex-direction: row;
+  background-color: #ffe6e6;
+  justify-content: center;
+  color: red;
+  margin-bottom: 10px;
 }
 
 @keyframes App-logo-spin {

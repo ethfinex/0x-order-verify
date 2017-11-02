@@ -1,83 +1,200 @@
 import React, { Component } from 'react'
+import { ZeroEx } from '0x.js'
+import TextArea from 'react-textarea-autosize'
+
 import logo from './logo.svg'
 import './App.css'
-import {ZeroEx} from '0x.js'
 
 class App extends Component {
   constructor (props) {
-      super(props)
-      this.state = {order: '',
-                    hash: ''}
-
-      this.handleOrderChange = this.handleOrderChange.bind(this)
-      this.handleHashChange = this.handleHashChange.bind(this)
-      this.handleVerify = this.handleVerify.bind(this)
+    super(props)
+    this.state = {
+      order: '',
+      hash: '',
+      success: false,
+      error: ''
     }
 
-    handleOrderChange (e) {
-      this.setState({order: e.target.value})
+    this.handleOrderChange = this.handleOrderChange.bind(this)
+    this.handleHashChange = this.handleHashChange.bind(this)
+    this.handleVerify = this.handleVerify.bind(this)
+  }
+
+  handleOrderChange (e) {
+    let parsedJson = e.target.value
+    parsedJson = parsedJson.replace(/[“”‘’"]/g, '"')
+    let error = null
+    try {
+      parsedJson = JSON.parse(parsedJson)
+    } catch (e) {
+      // silence error, user could be typing
+      error = e
+    }
+    this.setState({
+      order: (error) ? parsedJson : JSON.stringify(parsedJson, undefined, 2),
+      error: '',
+      success: false
+    })
+  }
+
+  handleHashChange (e) {
+    this.setState({
+      hash: e.target.value,
+      error: '',
+      success: false
+    })
+  }
+
+  handleVerify () {
+    if (this.state.order === '') {
+      this.setState({
+        error: 'Please first paste in a 0x order.'
+      })
+      return
+    } else if (this.state.hash === '') {
+      this.setState({
+        error: 'Please first paste in a 0x hash.'
+      })
+      return
     }
 
-    handleHashChange (e) {
-      this.setState({hash: e.target.value})
+    try {
+      JSON.parse(this.state.order)
+    } catch (e) {
+      this.setState({
+        error: 'Order must be in JSON format i.e. {\'key\':\'value\',...}'
+      })
+      return
     }
 
-    handleVerify () {
-      if(this.state.order === '') {
-        alert('Please first paste in a 0x order')
-        return
-      } else if (this.state.hash === '') {
-        alert('Please first paste in a 0x hash')
-        return
-      }
-      console.log('Order: ' + this.state.order)
-      console.log('Hash: ' + this.state.hash)
-      console.log('Starting verification')
-
-      try {
-        JSON.parse(this.state.order)
-      } catch (e) {
-        alert('The order must be in json format i.e. {\'key\':\'value\',...}')
-        return
-      }
-
-      let calculatedOrderHash = ZeroEx.getOrderHashHex(JSON.parse(this.state.order))
-      console.log(calculatedOrderHash)
-        if(ZeroEx.isValidOrderHash(this.state.hash)) {
-          if(calculatedOrderHash === this.state.hash) {
-            alert('The hash is correct!')
-          } else {
-            alert('The hash does not match the order')
-          }
+    try {
+      let calculatedOrderHash =
+      ZeroEx.getOrderHashHex(JSON.parse(this.state.order))
+      if (ZeroEx.isValidOrderHash(this.state.hash)) {
+        if (calculatedOrderHash === this.state.hash) {
+          this.setState({success: true})
+        } else {
+          this.setState({
+            error: 'The hash does not match the order.'
+          })
         }
-        else {
-          alert('The hash should look be in the following format 0x4jdsf...')
-        }
+      } else {
+        this.setState({
+          error: 'The hash should look be in the following format 0x4jdsf...'
+        })
+      }
+    } catch (e) {
+      this.setState({
+        error: 'Order must conform to the 0x message format (see: https://0xproject.com/wiki#Message-Format)'
+      })
+      return
     }
+  }
 
-  render() {
+  renderTextAreaDiv (params = {}) {
+    const {
+      _text,
+      _className,
+      _onChange,
+      _value,
+      _placeholder
+    } = params
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">0x order verification tool</h1>
-        </header>
-        <p className="App-intro">
-          To verify that a hash is correct before signing it, copy a 0x order and hash into the boxes below:
-        </p><br></br><br></br>
-        <form>
-        <b>Order parameters (json format):</b><br></br>
-        <input type="textarea" className="App-inputbox" onChange={this.handleOrderChange} value={this.state.order} placeholder="{&quot;expirationUnixTimestampSec&quot;:&quot;1507056275&quot;,&quot;feeRecipient&quot;:&quot;0xe73a1998ce936acebeb7899..."/><br>
-        </br><br></br><b>Hashed order (to verify before signing):</b><br></br>
-        <input type="text" className="App-inputbox" onChange={this.handleHashChange} value={this.state.hash} placeholder="0xf53a1j98ce6993dxebeb7899..."/><br></br><br></br>
-        <input type="submit" className="App-button" value="Verify" onClick={this.handleVerify}/>
+      <div className='App-div-input'>
+        <b>{_text}</b>
+        <TextArea
+          className={_className}
+          onChange={_onChange}
+          value={_value}
+          placeholder={_placeholder}
+          style={{'padding': '20px'}}
+          />
+      </div>
+    )
+  }
+
+  renderForm () {
+    const orderParam = {
+      _text: 'Order parameters (JSON format):',
+      _className: 'App-textarea',
+      _onChange: this.handleOrderChange,
+      _value: this.state.order,
+      _placeholder: '{"expirationUnixTimestampSec": 1507056275, ' +
+        '"feeRecipient": 0xe73a1998ce936acebeb7899...'
+    }
+    const hashParam = {
+      _text: 'Hashed order (to verify before signing):',
+      _className: 'App-textarea',
+      _onChange: this.handleHashChange,
+      _value: this.state.hash,
+      _placeholder: '0xf53a1j98ce6993dxebeb7899...'
+    }
+    return (
+      <div className='App-body-container'>
+        <form className='App-form'>
+          {this.renderTextAreaDiv(orderParam)}
+          {this.renderTextAreaDiv(hashParam)}
+          <div className='App-div-submit'>
+            <input
+              type={'button'}
+              className={'App-button'}
+              value={'Verify'}
+              onClick={this.handleVerify} />
+          </div>
         </form>
-        <div className="App-efx">
-          This tool was created open source by <a href="https://www.ethfinex.com">Ethfinex</a> and the source code can be found <a href="https://github.com/plutoegg/0x-order-verify"> on Github </a>
+      </div>
+    )
+  }
+
+  renderAlert () {
+    if (this.state.success) {
+      return (
+        <div className='App-body-container'>
+          <div className='App-alert-green'>
+            <div>The hash is correct!</div>
+          </div>
+        </div>
+      )
+    } else if (this.state.error !== '') {
+      return (
+        <div className='App-body-container'>
+          <div className='App-alert-red'>
+            <div>{this.state.error}</div>
+          </div>
+        </div>
+      )
+    }
+  }
+
+  render () {
+    return (
+      <div className='App'>
+        <header className='App-header'>
+          <img src={logo} className='App-logo' alt='logo' />
+          <h1 className='App-title'><b>0x</b> Order Verification Tool</h1>
+        </header>
+        <div className='App-body'>
+          <div className='App-body-container'>
+            <p className='App-intro'>
+              To verify that a hash is correct before signing it,
+              copy a 0x order and hash into the boxes below:
+            </p>
+          </div>
+          {this.renderAlert()}
+          {this.renderForm()}
+          <div className='App-body-container'>
+            This tool was created open source by &thinsp;
+            <a href='https://www.ethfinex.com'>Ethfinex</a>
+            &thinsp; and the source code can be found on &thinsp;
+            <a href='https://github.com/plutoegg/0x-order-verify'>
+              Github
+            </a>
+            .
+          </div>
         </div>
       </div>
     )
   }
 }
 
-export default App;
+export default App
